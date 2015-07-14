@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Alfresco Mobile for iOS</title>
+
+  <!-- Bootstrap: v3.3.5 core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <!-- Additional page styles for the documentation -->
+  <link rel="stylesheet" href="css/alfresco.css">
+  <!-- Google code prettifier -->
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+  
+  <!-- Page Specific Script -->
+    <script type="text/javascript">
+  function launchApp(fallbackURL) {
+    window.setTimeout(function() {
+      window.location = fallbackURL;
+    }, 100);
+  }
+  </script>
+
+</head>
+<body role="document">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Alfresco Mobile: Information Site</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        </div>
+    </div>
+</nav>
+
+<div class="container" role="main">
+    <div class="page-header">
+        <h1>Alfresco Mobile for iOS: App Launch Examples</h1>
+    </div>
+
+    <p>Apple allows iOS apps to register a custom URL scheme, which allows them to be launched from web pages and third party apps. This page documents a number of ways you, as a web developer, can author HTML and JavaScript to launch the Alfresco Mobile app. We will also demonstrate several different ways to handle cases where the app is not installed on a device.</p>
+
+    <h2>The Alfresco Mobile URL Scheme</h2>
+    <p>Alfresco Mobile for iOS has registered the <code>alfresco://</code> URL scheme.</p>
+
+    <div class="callout callout-info">
+        <h4>Duplicate installed URL schemes</h4>
+        <p>iOS does not prevent multiple apps from registering the same URL scheme. Due to its Open Source nature, several third party apps exist in the App Store which are built upon the Alfresco Mobile codebase. Unless the developer of the third party app has explicity changed the registered scheme, it is entirely possible for a user to have two or more apps which are able to respond to an <code>alfresco://</code> link. Apple states that the behaviour in these situations is <em>undefined</em> and it may not be the Alfresco Mobile app which is launched.</p>
+    </div>
+
+    <h2>A Simple HTML Link</h2>
+    <p>If you can guarantee that your users have the Alfresco Mobile app installed on their devices, you may generate very simple links</p>
+    <div class="example"><a href="alfresco://">Alfresco Mobile for iOS</a></div>
+    <pre class="example"><code class="prettyprint">&lt;a href="alfresco://"&gt;Alfresco Mobile for iOS&lt;/a&gt;</code></pre>
+
+    <h2>Error Handling</h2>
+    <p>With the simple HTML link example above, a user who does not have the Alfresco Mobile app installed will be presented with an unhelpful error pop-up and no obvious call to action to fix the problem. Currently Apple provides no means for a web developer to pre-determine whether an app is present on a device or not. Therefore we must construct the HTML link in such a way that Mobile Safari has an error handling path. This error handling generally takes the form of a <mark>fallback URL</mark>, relocating the user to a marketing site, or the appropriate App Store page.</p>
+    <p>The error (or fallback) handling requires a few lines of JavaScript. This can be embedded in the link HTML itself or in the <code>&lt;head&gt;</code> section of the web page. The technical details of the JavaScript code are not important; this common technique is used by many app developers.</p>
+    <div class="example"><a href="alfresco://" onclick="setTimeout(function(){ window.location='https://itunes.apple.com/app/alfresco/id459242610?mt=8' }, 100)">Alfresco Mobile for iOS</a></div>
+    <pre class="example"><code class="prettyprint">&lt;a href="alfresco://" onclick="setTimeout(function(){ window.location='https://itunes.apple.com/app/alfresco/id459242610?mt=8' }, 100)"&gt;Alfresco Mobile for iOS&lt;/a&gt;</code></pre>
+    <p>Let's examine the components of the example above:</p>
+    <dl class="dl-horizontal">
+      <dt><samp>onclick="..."</samp></dt>
+      <dd>Run some JavaScript code when the user taps on the link.</dd>
+      <dt><samp>setTimeout(fn,t)</samp></dt>
+      <dd>Execute the JavaScript function <var>fn</var> after <var>t</var> milliseconds</dd>
+      <dt><samp>window.location='...'</samp></dt>
+      <dd>Relocate the user's browser to a different URL</dd>
+      <dt><samp>https://itunes.apple.com/app/alfresco/id459242610?mt=8</samp></dt>
+      <dd>The URL of the Alfresco Mobile app in the App Store. These links can be generated easily using the <a href="https://linkmaker.itunes.apple.com">iTunes Link Maker</a></dd>
+    </dl>
+    <p>Putting all this together, we're telling Mobile Safari to redirect the user to a URL (the App Store in this example) 100ms after the link has been tapped. Due to the way iOS operates, Mobile Safari will <em>not run the page redirect code if the user has an app installed that can handle the custom URL scheme</em>. In other words, users that have Alfresco Mobile installed will be presented with that app, whereas users who do not yet have the Alfresco app will be redirected to the correct App Store page where they can download  it.</p>
+    <div class="callout callout-info">
+      <h4>Fallback URLs</h4>
+      <p>The fallback URL that we use doesn't have to address the app's App Store page; although in most cases this offers the best user experience. For example, you may want to present the user with a marketing page first explaining why they should install the app, or you may have a suitably responsive web site that the user can interact with in place of the mobile app.</p>
+    </div>
+
+    <h2>Improving the HTML Markup</h2>
+    <p>The HTML markup described above had all the JavaScript inline with the link itself. This is fine if there's just one link on the page, but often there will be more and we can improve the HTML markup with that in mind.</p>
+    <div class="example"><a href="alfresco://" onclick="launchApp('https://itunes.apple.com/app/alfresco/id459242610?mt=8')">Alfresco Mobile for iOS</a></div>
+    <pre class="example"><code class="prettyprint">&lt;head&gt;
+  &lt;script type="text/javascript"&gt;
+  function launchApp(fallbackURL) {
+    window.setTimeout(function() {
+      window.location = fallbackURL;
+    }, 100);
+  }
+  &lt;/script&gt;
+&lt;/head&gt;
+
+&lt;a href="alfresco://" onclick="launchApp('https://itunes.apple.com/app/alfresco/id459242610?mt=8')"&gt;Alfresco Mobile for iOS&lt;/a&gt;
+</code></pre>
+  <p>The above example is functionally exactly the same as the previous one, but we've moved the JavaScript code into the <code>&lt;head&gt;</code> block of the page. This is not only considered better practice, but also allows us to generate multiple different links in a much cleaner way:</p>
+    <div class="example">
+      <a href="alfresco://" onclick="launchApp('https://itunes.apple.com/app/alfresco/id459242610?mt=8')">Alfresco Mobile for iOS</a><br>
+      <a href="alfresco://" onclick="launchApp('http://appstore.com/alfresco')">An alternate App Store URL</a><br>
+      <a href="alfresco://" onclick="launchApp('http://mobile.alfresco.com')">Fallback to the Alfresco Mobile marketing site at mobile.alfresco.com</a>
+    </div>
+    <pre class="example"><code class="prettyprint">&lt;head&gt;
+  &lt;script type="text/javascript"&gt;
+  function launchApp(fallbackURL) {
+    window.setTimeout(function() {
+      window.location = fallbackURL;
+    }, 100);
+  }
+  &lt;/script&gt;
+&lt;/head&gt;
+
+&lt;a href="alfresco://" onclick="launchApp('https://itunes.apple.com/app/alfresco/id459242610?mt=8')"&gt;Alfresco Mobile for iOS&lt;/a&gt;
+&lt;a href="alfresco://" onclick="launchApp('http://appstore.com/alfresco')"&gt;An alternate App Store URL&lt;/a&gt;
+&lt;a href="alfresco://" onclick="launchApp('http://mobile.alfresco.com')"&gt;Fallback to the Alfresco Mobile marketing site at mobile.alfresco.com&lt;/a&gt;
+</code></pre>
+
+    <h2>Further Information</h2>
+    <p>If you have any questions regarding this document, please contact:</p>
+    <address>
+      <strong>Mike Hatfield</strong><br>
+      Lead Engineer, Mobile Apps @ Alfresco<br>
+      <a href="mailto:mobile@alfresco.com">mobile@alfresco.com</a>
+    </address>
+    <p>08 July 2015</p>
+    <p class="text-center">Copyright &copy; Alfresco Software, Inc.</p>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* Site Template
+-------------------------------------------------- */
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+/* Callout box styles
+-------------------------------------------------- */
+.callout {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+
+.callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.callout-info {
+    border-left-color: #0082c8;
+}
+.callout-info h4 {
+    color: #0082c8;
+}
+
+.callout-danger {
+    border-left-color: #ce4844;
+}
+.callout-danger h4 {
+    color: #ce4844;
+}
+
+/* Coding example blocks
+-------------------------------------------------- */
+div.example {
+    position: relative;
+    margin-bottom: 15px;
+    padding: 45px 15px 15px;
+    background-color: #fff;
+    border-color: #ddd;
+    border-width: 1px;
+    border-radius: 4px 4px 0 0;
+    border-style: solid;
+}
+div.example::after {
+    content: "Example";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+pre.example {
+    margin-top: -16px;
+    padding-left: 15px;
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    word-break: normal;
+    white-space: pre-wrap;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    background-color: #f5f5f5;
+}
+.footer .container {
+    padding-top: 20px;
+}
